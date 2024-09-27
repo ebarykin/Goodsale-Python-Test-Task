@@ -1,0 +1,8 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0  # Убедитесь, что используете последнюю версию
+    hooks:
+      - id: trailing-whitespace  # Удаляет пробелы в конце строки
+      - id: end-of-file-fixer     # Убедитесь, что файл заканчивается новой строкой
+      - id: check-yaml            # Проверка файлов YAML на правильность
+      - id: check-added-large-files  # Проверяет добавленные большие файлы

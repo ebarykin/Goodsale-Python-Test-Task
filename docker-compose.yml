@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: marketplace
+      POSTGRES_HOST_AUTH_METHOD: trust  # Добавьте эту строку
+    ports:
+#      - "172.0.0.1:5438:5432"
+      - "127.0.0.1:5438:5432"
+
+  elasticsearch:
+    image: elasticsearch:8.5.2
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=your_password # Задайте пароль для пользователя "elastic"
+    ports:
+      - "9200:9200"
+      - "9300:9300" # Включен для взаимодействия между узлами
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  service:
+    build: .
+    depends_on:
+      - postgres
+      - elasticsearch
+    environment:
+      POSTGRES_DB: marketplace
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: postgres
+      ELASTICSEARCH_HOST: elasticsearch:9200
+    volumes:
+      - ./app:/app
+    command: python /app/main.py
+#    command: python /app/elastic.py
+#    command: python /app/match.py
+
+volumes:
+  postgres_data:
+  es_data:
